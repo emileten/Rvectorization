@@ -70,6 +70,12 @@
 	#you could have another variable as well, population. 
 	pop = c(60, 48, 11, 63, 49, 12)
 	pop = matrix(pop, nrow, ncol, byrow, dimnames)
-	array(c(gdp, pop), dim=c(2,3,2), dimnames=c(dimnames(m), list(c('GDP per capita', 'population in million'))))
-	
+	a = array(c(gdp, pop), dim=c(2,3,2), dimnames=c(dimnames(m), list(c('GDP per capita', 'population in million'))))
+	a 
 	#beautiful array !
+	#how do you analyze  ?
+	list(dim(a),dimnames(a))
+	a[,,'GDP per capita']
+	a['2010',,]
+	a[,'France',]
+	#beautiful ! 
