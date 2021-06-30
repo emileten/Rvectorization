@@ -61,14 +61,14 @@
 #arrays
 	#now, you noticed you don't know what the above values are....
 	#let's say this is gdp per capita. 
-	gdp = c(40000, 30000, 25000, 45000, 38000, 28000)
+	gdp = c(40000, 30000, 25000, NA, NA,NA)
 	gdp = matrix(gdp, nrow, ncol, byrow, dimnames)
 	#how do you show this is GPD per capita? You can make a 3D array out of your matrix. 
 	#the third dimension is the variable
 	array(gdp,dim=c(2,3,1), dimnames=c(dimnames(m), list('GDP per capita')))
 
 	#you could have another variable as well, population. 
-	pop = c(60, 48, 11, 63, 49, 12)
+	pop = c(60, 48, 11, NA, NA, NA)
 	pop = matrix(pop, nrow, ncol, byrow, dimnames)
 	a = array(c(gdp, pop), dim=c(2,3,2), dimnames=c(dimnames(m), list(c('GDP per capita', 'population in million'))))
 	a 
@@ -78,4 +78,42 @@
 	a[,,'GDP per capita']
 	a['2010',,]
 	a[,'France',]
-	#beautiful ! 
+	#beautiful !
+
+	b = array(c(gdp, pop), dim=c(2,3,2), dimnames=c(list(c('2040', '2050'),c('France', 'South Korea', 'Greece')), list(c('GDP per capita', 'population in million'))))
+  
+  	#how do you subset ?
+  	#this is a **** pain. 
+  	#Why do people even use arrays??
+  	#make a **** list of data tables or data frames for god's sake.
+  	#I use narray. A mysterious package with 0 documentation. 
+	#how nice : this complicated line TO DROP NAS......
+  	narray::map(X=a, along=1,FUN=function(x) x[!is.na(x)], drop=F)
+
+  	# in data table it would be 
+  	sapply(X=datas, FUN=function(x) x[!is.na()])
+
+  	narray::filter(X=a,along=2, FUN=is.na())
+
+
+  	#how do you bind ? 
+  	#using abind()
+  	abind(a,b)
+
+  	#using narray 
+  	narray:::stack(a,b)
+
+	#nice thing with narray:::stack is that it automatically creates a new dimension  
+	#hence nice trick : 
+	narray:::stack(a)
+	#pretty nice in if you're appending arrays over a vector. 
+
+
+	b = narray:::stack(a)
+	c = narray:::stack(a)
+	bc = abind(c,d)
+	d = narray:::stack(a)
+
+	bcd = abind(bc,d)
+
+	dimnames(bcd)[[length(dim(bcd))]] <- as.character(paste(seq(1:dim(bcd)[length(dim(bcd))])))
